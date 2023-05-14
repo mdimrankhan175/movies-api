@@ -44,6 +44,8 @@ const convertDirectorDbObjectToResponseObject = (dbObject) => {
   };
 };
 
+// API -1
+
 app.get("/movies/", async (request, response) => {
   const getMoviesQuery = `
     SELECT
@@ -55,6 +57,21 @@ app.get("/movies/", async (request, response) => {
     moviesArray.map((eachMovie) => ({ movieName: eachMovie.movie_name }))
   );
 });
+
+// API-2
+
+app.post("/movies/", async (request, response) => {
+  const { directorId, movieName, leadActor } = request.body;
+  const postMovieQuery = `
+  INSERT INTO
+    movie ( director_id, movie_name, lead_actor)
+  VALUES
+    (${directorId}, '${movieName}', '${leadActor}');`;
+  await database.run(postMovieQuery);
+  response.send("Movie Successfully Added");
+});
+
+// API-3
 
 app.get("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
@@ -69,16 +86,7 @@ app.get("/movies/:movieId/", async (request, response) => {
   response.send(convertMovieDbObjectToResponseObject(movie));
 });
 
-app.post("/movies/", async (request, response) => {
-  const { directorId, movieName, leadActor } = request.body;
-  const postMovieQuery = `
-  INSERT INTO
-    movie ( director_id, movie_name, lead_actor)
-  VALUES
-    (${directorId}, '${movieName}', '${leadActor}');`;
-  await database.run(postMovieQuery);
-  response.send("Movie Successfully Added");
-});
+// API -4
 
 app.put("/movies/:movieId/", async (request, response) => {
   const { directorId, movieName, leadActor } = request.body;
@@ -97,6 +105,8 @@ app.put("/movies/:movieId/", async (request, response) => {
   response.send("Movie Details Updated");
 });
 
+// API - 5
+
 app.delete("/movies/:movieId/", async (request, response) => {
   const { movieId } = request.params;
   const deleteMovieQuery = `
@@ -107,6 +117,8 @@ app.delete("/movies/:movieId/", async (request, response) => {
   await database.run(deleteMovieQuery);
   response.send("Movie Removed");
 });
+
+// API-6
 
 app.get("/directors/", async (request, response) => {
   const getDirectorsQuery = `
@@ -122,6 +134,8 @@ app.get("/directors/", async (request, response) => {
   );
 });
 
+// API-7
+
 app.get("/directors/:directorId/movies/", async (request, response) => {
   const { directorId } = request.params;
   const getDirectorMoviesQuery = `
@@ -136,4 +150,5 @@ app.get("/directors/:directorId/movies/", async (request, response) => {
     moviesArray.map((eachMovie) => ({ movieName: eachMovie.movie_name }))
   );
 });
+
 module.exports = app;
